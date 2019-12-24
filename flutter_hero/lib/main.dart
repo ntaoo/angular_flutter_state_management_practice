@@ -15,11 +15,11 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Provider<InMemoryDataService>.value(
+    return Provider<http.Client>.value(
       value: InMemoryDataService(),
-      child: ProxyProvider<InMemoryDataService, model.HeroService>(
-        update: (context, inMemoryDataService, _) {
-          return model.HeroService(inMemoryDataService);
+      child: ProxyProvider<http.Client, model.HeroService>(
+        update: (context, httpClient, _) {
+          return model.HeroService(httpClient);
         },
         child: MaterialApp(
           title: 'Tour of Heroes',
@@ -30,8 +30,8 @@ class MyApp extends StatelessWidget {
             RouteName.dashboard: (context) {
               return Provider<model.HeroSearchService>(
                 create: (context) {
-                  final httpClient = Provider.of<http.Client>(context);
-                  return model.HeroSearchService(httpClient);
+                  return model.HeroSearchService(
+                      Provider.of<http.Client>(context));
                 },
                 dispose: (context, self) {
                   self.dispose();
